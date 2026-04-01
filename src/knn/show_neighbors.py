@@ -32,7 +32,7 @@ def main():
     knn.fit(embeddings)
 
     # 4) Choisir une image (id)
-    idx = 167
+    idx = 100
     k = 10
 
     neighbors, distances = knn.query(idx, k=k)
