@@ -22,7 +22,6 @@ from src.knn.knn_search import KNNFinder
 from src.embedding.extractor import EmbeddingExtractor
 
 
-
 # =========================
 # CONFIG
 # =========================
@@ -33,7 +32,7 @@ UNKNOWN_THRESHOLD = 0.35
 
 
 def download_file(file_id, dest_path):
-    url = 'https://drive.google.com/drive/folders/1JKEwPWufuxF230exY1gGkXUx3uq7Rroj?usp=sharing'
+    url = f'https://drive.google.com/uc?id={file_id}'
     gdown.download(url, dest_path, quiet=False)
 
 # =========================
@@ -45,9 +44,26 @@ def load_data():
     coords     = np.load("data/processed/coords_2d.npy")
     labels     = np.load("data/processed/labels.npy")
 
-    loader  = CIFARLoader(root_dir="./data/raw", train=True)
-    dataset = loader.load()
-    subset  = Subset(dataset, range(len(embeddings)))
+    # Ensure directory exists
+    os.makedirs('data/processed', exist_ok=True)
+
+# Paths where files will be saved
+    embeddings_path = 'data/processed/embeddings.npy'
+    coords_path = 'data/processed/coords_2d.npy'
+    labels_path = 'data/processed/labels.npy'
+
+    # Download if not present
+    if not os.path.exists(embeddings_path):
+        download_file(embeddings_id, embeddings_path)
+    if not os.path.exists(coords_path):
+        download_file(coords_id, coords_path)
+    if not os.path.exists(labels_path):
+        download_file(labels_id, labels_path)
+
+    # Load the data
+    embeddings = np.load(embeddings_path)
+    coords = np.load(coords_path)
+    labels = np.load(labels_path)
 
     return embeddings, coords, labels, subset, dataset.classes
 
