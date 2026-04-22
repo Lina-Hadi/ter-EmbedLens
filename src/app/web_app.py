@@ -50,7 +50,7 @@ def download_and_extract_zip(zip_url, extract_to):
 @st.cache_data
 def load_data():
     zip_url = 'https://drive.google.com/file/d/15Aoqa6RB7uEozcIveI-xYz8rkVi0saWf/view?usp=drive_link'  # Replace with your actual Google Drive zip link
-    extract_to = 'data/processed'
+    extract_to = 'data'
     
     # Ensure the directory exists
     os.makedirs(extract_to, exist_ok=True)
@@ -59,9 +59,9 @@ def load_data():
     download_and_extract_zip(zip_url, extract_to)
 
     # Now load your data
-    embeddings = np.load(os.path.join(extract_to, 'embeddings.npy'))
-    coords = np.load(os.path.join(extract_to, 'coords_2d.npy'))
-    labels = np.load(os.path.join(extract_to, 'labels.npy'))
+    embeddings = np.load(os.path.join(extract_to, 'processed/embeddings.npy'))
+    coords = np.load(os.path.join(extract_to, 'processed/coords_2d.npy'))
+    labels = np.load(os.path.join(extract_to, 'processed/labels.npy'))
 
     return embeddings, coords, labels, subset, dataset.classes
 
