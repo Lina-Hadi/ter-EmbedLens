@@ -12,6 +12,8 @@ import torch
 from PIL import Image
 from torch.utils.data import Subset
 from collections import Counter
+import warnings
+warnings.filterwarnings("ignore", category=DeprecationWarning)
 
 from src.dataset.cifar_loader import CIFARLoader
 from src.knn.knn_search import KNNFinder

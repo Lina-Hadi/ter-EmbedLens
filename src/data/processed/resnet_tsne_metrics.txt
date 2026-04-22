@@ -1,0 +1,8 @@
+===== METRIQUES ResNet50 + t-SNE =====
+Nombre d'images: 1000
+k pour k-NN et Trustworthiness: 5
+
+Silhouette Score     : 0.0690
+Davies-Bouldin Index : 3.0964
+Trustworthiness      : 0.9593
+k-NN Accuracy        : 0.7630

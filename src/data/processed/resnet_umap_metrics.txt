@@ -1,0 +1,8 @@
+===== METRIQUES ResNet50 + UMAP =====
+Nombre d'images: 1000
+k pour k-NN et Trustworthiness: 5
+
+Silhouette Score     : 0.1074
+Davies-Bouldin Index : 3.4907
+Trustworthiness      : 0.9337
+k-NN Accuracy        : 0.7630

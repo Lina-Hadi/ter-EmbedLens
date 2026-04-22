@@ -1,0 +1,8 @@
+===== METRIQUES CLIP Fine-tuné + UMAP =====
+Nombre d'images: 1000
+k pour k-NN et Trustworthiness: 5
+
+Silhouette Score     : 0.3528
+Davies-Bouldin Index : 1.3132
+Trustworthiness      : 0.9637
+k-NN Accuracy        : 0.8650
