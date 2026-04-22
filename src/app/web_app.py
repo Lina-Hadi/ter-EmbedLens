@@ -4,6 +4,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.append(str(ROOT))
 
+import os
+import gdown
 import streamlit as st
 import numpy as np
 import pandas as pd
@@ -20,6 +22,7 @@ from src.knn.knn_search import KNNFinder
 from src.embedding.extractor import EmbeddingExtractor
 
 
+
 # =========================
 # CONFIG
 # =========================
@@ -28,6 +31,10 @@ st.title("Visualisation des embeddings d'images")
 
 UNKNOWN_THRESHOLD = 0.35
 
+
+def download_file(file_id, dest_path):
+    url = 'https://drive.google.com/drive/folders/1JKEwPWufuxF230exY1gGkXUx3uq7Rroj?usp=sharing'
+    gdown.download(url, dest_path, quiet=False)
 
 # =========================
 # LOAD DATA (CLIP + UMAP — défaut)
