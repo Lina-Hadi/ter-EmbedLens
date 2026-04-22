@@ -5,6 +5,7 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.append(str(ROOT))
 
 import os
+import zipfile
 import gdown
 import streamlit as st
 import numpy as np
@@ -31,39 +32,36 @@ st.title("Visualisation des embeddings d'images")
 UNKNOWN_THRESHOLD = 0.35
 
 
-def download_file(file_id, dest_path):
-    url = f'https://drive.google.com/uc?id={file_id}'
-    gdown.download(url, dest_path, quiet=False)
+def download_and_extract_zip(zip_url, extract_to):
+    zip_path = 'data_folder.zip'
+    # Download the zip file
+    gdown.download(zip_url, zip_path, quiet=False)
+
+    # Extract the zip file
+    with zipfile.ZipFile(zip_path, 'r') as zip_ref:
+        zip_ref.extractall(extract_to)
+    
+    # Clean up the zip file after extraction
+    os.remove(zip_path)
 
 # =========================
 # LOAD DATA (CLIP + UMAP — défaut)
 # =========================
 @st.cache_data
 def load_data():
-    embeddings = np.load("data/processed/embeddings.npy")
-    coords     = np.load("data/processed/coords_2d.npy")
-    labels     = np.load("data/processed/labels.npy")
+    zip_url = 'https://drive.google.com/file/d/15Aoqa6RB7uEozcIveI-xYz8rkVi0saWf/view?usp=drive_link'  # Replace with your actual Google Drive zip link
+    extract_to = 'data/processed'
+    
+    # Ensure the directory exists
+    os.makedirs(extract_to, exist_ok=True)
 
-    # Ensure directory exists
-    os.makedirs('data/processed', exist_ok=True)
+    # Download and extract the zip file
+    download_and_extract_zip(zip_url, extract_to)
 
-# Paths where files will be saved
-    embeddings_path = 'data/processed/embeddings.npy'
-    coords_path = 'data/processed/coords_2d.npy'
-    labels_path = 'data/processed/labels.npy'
-
-    # Download if not present
-    if not os.path.exists(embeddings_path):
-        download_file(embeddings_id, embeddings_path)
-    if not os.path.exists(coords_path):
-        download_file(coords_id, coords_path)
-    if not os.path.exists(labels_path):
-        download_file(labels_id, labels_path)
-
-    # Load the data
-    embeddings = np.load(embeddings_path)
-    coords = np.load(coords_path)
-    labels = np.load(labels_path)
+    # Now load your data
+    embeddings = np.load(os.path.join(extract_to, 'embeddings.npy'))
+    coords = np.load(os.path.join(extract_to, 'coords_2d.npy'))
+    labels = np.load(os.path.join(extract_to, 'labels.npy'))
 
     return embeddings, coords, labels, subset, dataset.classes
 
