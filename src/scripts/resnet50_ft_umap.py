@@ -37,8 +37,7 @@ from src.utils.metrics import compute_metrics, print_metrics, save_metrics
 # ------------------------------------------------------------------
 # Constantes par défaut (surchargeables via argparse)
 # ------------------------------------------------------------------
-DEFAULT_N_TRAIN    = 1000
-DEFAULT_N_TEST     = 1000
+DEFAULT_N_TEST     = 10000
 DEFAULT_K          = 5
 DEFAULT_EPOCHS     = 10
 DEFAULT_LR         = 0.0001
@@ -95,9 +94,9 @@ def main(args):
     dataset = loader.load()
 
     # Séparation stricte train / test (aucun chevauchement)
-    test_subset = Subset(dataset, range(args.n_train, args.n_train + args.n_test))
-    print(f"  Train : indices [0, {args.n_train}[")
-    print(f"  Test  : indices [{args.n_train}, {args.n_train + args.n_test}[")
+    test_loader = CIFARLoader(root_dir="./data/raw", train=False)
+    test_dataset = test_loader.load()
+    test_subset = Subset(test_dataset, range(args.n_test))
 
     # 2) Fine-tuning (ignoré si le checkpoint existe déjà)
     if not os.path.exists(args.model_path):
@@ -109,7 +108,6 @@ def main(args):
         )
         finetuner.finetune(
             root_dir="./data/raw",
-            n_train=args.n_train,
             save_path=args.model_path,
         )
     else:
@@ -169,10 +167,6 @@ def main(args):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description="Pipeline ResNet50 Fine-tuné + UMAP sur CIFAR-10"
-    )
-    parser.add_argument(
-        "--n_train", type=int, default=DEFAULT_N_TRAIN,
-        help=f"Nombre d'images pour le fine-tuning (défaut : {DEFAULT_N_TRAIN})",
     )
     parser.add_argument(
         "--n_test", type=int, default=DEFAULT_N_TEST,

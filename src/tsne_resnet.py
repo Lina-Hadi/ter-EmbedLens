@@ -46,7 +46,7 @@ def compute_metrics(embeddings, coords_2d, labels, k=5):
 def main():
     # 1) Charger CIFAR-10
     print("Chargement CIFAR-10...")
-    loader = CIFARLoader(root_dir="./data/raw", train=True)
+    loader = CIFARLoader(root_dir="./data/raw", train=False)
     dataset = loader.load()
     subset = Subset(dataset, range(N))
 

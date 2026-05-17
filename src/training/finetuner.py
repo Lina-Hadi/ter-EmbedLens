@@ -48,7 +48,7 @@ class ResNet50Finetuner:
     def finetune(
         self,
         root_dir: str = "./data/raw",
-        n_train: int = 1000,
+        n_train= None,
         save_path: str = "./data/models/resnet50_finetuned.pth",
     ):
         """
@@ -64,23 +64,20 @@ class ResNet50Finetuner:
             Le modèle PyTorch avec les meilleurs poids chargés.
         """
         # 1) Données
-        full_dataset = datasets.CIFAR10(
-            root=root_dir, train=True, download=True, transform=self.transform
-        )
+        # Entraînement sur les 50 000 images du train set officiel
+        train_dataset = datasets.CIFAR10(root=root_dir, train=True, download=True, transform=self.transform)
 
-        # Séparation 80 / 20 sur le sous-ensemble n_train
-        val_size   = max(1, int(n_train * 0.2))
-        train_size = n_train - val_size
+        # Évaluation sur les 10 000 images du test set officiel (jamais vues pendant l'entraînement)
+        test_dataset = datasets.CIFAR10(root=root_dir, train=False, download=True, transform=self.transform)
 
-        train_subset = Subset(full_dataset, range(train_size))
-        val_subset   = Subset(full_dataset, range(train_size, n_train))
+        val_size   = int(len(train_dataset) * 0.2)  # 10 000 images pour la validation
+        train_size = len(train_dataset) - val_size   # 40 000 images pour l'entraînement
 
-        train_loader = DataLoader(
-            train_subset, batch_size=self.batch_size, shuffle=True, num_workers=0
-        )
-        val_loader = DataLoader(
-            val_subset, batch_size=self.batch_size, shuffle=False, num_workers=0
-        )
+        train_subset = Subset(train_dataset, range(train_size))
+        val_subset   = Subset(train_dataset, range(train_size, len(train_dataset)))
+
+        train_loader = DataLoader(train_subset, batch_size=self.batch_size, shuffle=True)
+        val_loader   = DataLoader(val_subset, batch_size=self.batch_size, shuffle=False)
 
         print(
             f"\nFine-tuning ResNet50 | train={train_size} | val={val_size} | "
