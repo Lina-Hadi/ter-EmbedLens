@@ -37,7 +37,7 @@ from src.utils.metrics import compute_metrics, print_metrics, save_metrics
 # ------------------------------------------------------------------
 # Constantes par défaut (surchargeables via argparse)
 # ------------------------------------------------------------------
-DEFAULT_N_TEST     = 10000
+DEFAULT_N_TEST     = 1000
 DEFAULT_K          = 5
 DEFAULT_EPOCHS     = 10
 DEFAULT_LR         = 0.0001
